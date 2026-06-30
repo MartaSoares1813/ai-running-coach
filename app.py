@@ -1,5 +1,9 @@
 import os
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 import streamlit as st
 import plotly.express as px
 import pandas as pd
@@ -7,10 +11,7 @@ from data_processing import load_data, clean_data, summarize
 from ai_analysis import analyze
 from weather import get_weather_for_runs
 
-load_dotenv()
-
-# ── Load API key from environment ─────────────────────────────────────────────
-openweather_key = os.getenv("OPENWEATHER_API_KEY", "")
+openweather_key = st.secrets.get("OPENWEATHER_API_KEY", os.getenv("OPENWEATHER_API_KEY", ""))
 
 # ── Page config ────────────────────────────────────────────────────────────────
 st.set_page_config(

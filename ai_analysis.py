@@ -1,9 +1,17 @@
 import google.generativeai as genai
 import os
+import streamlit as st
+
+def get_gemini_key():
+    try:
+        return st.secrets["GEMINI_API_KEY"]
+    except Exception:
+        return os.getenv("GEMINI_API_KEY", "")
 
 def analyze(summary, df):
     try:
-        genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+        api_key = get_gemini_key()
+        genai.configure(api_key=api_key)
         model = genai.GenerativeModel("gemini-2.0-flash")
 
         prompt = f"""
@@ -14,14 +22,13 @@ You are an expert running coach. Analyze this athlete's training data and give p
 - Average heart rate: {summary['avg_heart_rate']:.0f} bpm
 - Pace history (min/km): {summary['avg_pace']}
 
-Give feedback on effort, consistency, pace progression, and volume. Also, provide tips for improvement.
-Keep it concise, specific, and motivating. Use emojis. 
+Give feedback on effort, consistency, pace progression, and volume.
+Keep it concise, specific, and motivating. Use emojis. Max 150 words.
 """
         response = model.generate_content(prompt)
         return response.text
 
     except Exception:
-        # Fallback to rule-based analysis if API is unavailable
         return rule_based_analysis(summary)
 
 
