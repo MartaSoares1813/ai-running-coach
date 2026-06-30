@@ -83,6 +83,9 @@ streamlit run app.py
 
 ---
 
+# 🧪 Try it with sample data
+A sample Garmin export is included at `sample_data/sample_activities.csv` — upload this file in the app to test it without needing your own Garmin account.
+
 ## 🛠️ Tech Stack
 
 | Tool | Purpose |
